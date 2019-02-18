@@ -277,7 +277,15 @@ s = [
 key = [ 0x4B7A70E9, 0xB5B32944, 0xDB75092E, 0xC4192623,
         0xAD6EA6B0, 0x49A7DF7D, 0x9CEE60B8, 0x8FEDB266,
         0xECAA8C71, 0x699A17FF, 0x5664526C, 0xC2B19EE1,
-0x193602A5, 0x75094C29]
+        0x193602A5, 0x75094C29]
+
+p_new = p.copy()
+
+def swap(a,b):
+    temp = a
+    a = b
+    b = temp
+    return a,b
 
 def driver():
         for i in range(0,18):
@@ -293,7 +301,9 @@ def driver():
             data = temp
         encrypt_data = int(input("Enter data to encrypt: "))
         encrypted_data = encryption(encrypt_data)
-        print(encrypted_data) 
+        print(encrypted_data)
+        decrypted_data = decryption(encrypted_data)
+        print(decrypted_data) 
 
 def encryption(data):
         L = data>>32
@@ -302,8 +312,8 @@ def encryption(data):
                 L = p[i]^L
                 L1 = func(L)
                 R = R^func(L1)
-                L,R = R,L
-        L,R = R,L
+                L,R = swap(L,R)
+        L,R = swap(L,R)
         L = L^p[17]
         R = R^p[16]
         encrypted = (L<<32) ^ R
@@ -316,5 +326,19 @@ def func(L):
     temp = temp ^ s[2][L >> 8 & 0xff]
     temp = (temp + s[3][L & 0xff]) % (0x1<<32)
     return temp
+
+def decryption(data):
+    L = data >> 32
+    R = data & 0xffffffff
+    for i in range(17, 1, -1):
+        L = p[i]^L
+        L1 = func(L)
+        R = R^func(L1)
+        L,R = swap(L,R)
+    L,R = swap(L,R)
+    L = L^p[0]
+    R = R^p[1]
+    decrypted_data1 = (L<<32) ^ R
+    return decrypted_data1
 
 driver()
