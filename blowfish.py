@@ -301,9 +301,9 @@ def driver():
             data = temp
         encrypt_data = int(input("Enter data to encrypt: "))
         encrypted_data = encryption(encrypt_data)
-        print(encrypted_data)
+        print("Encrypted data : ",encrypted_data)
         decrypted_data = decryption(encrypted_data)
-        print(decrypted_data) 
+        print("Decrypted data : ",decrypted_data) 
 
 def encryption(data):
         L = data>>32
@@ -322,9 +322,9 @@ def encryption(data):
 
 def func(L):
     temp = s[0][L >> 24]
-    temp = (temp + s[1][L >> 16 & 0xff]) % (0x1<<32)
+    temp = (temp + s[1][L >> 16 & 0xff]) % 2**32
     temp = temp ^ s[2][L >> 8 & 0xff]
-    temp = (temp + s[3][L & 0xff]) % (0x1<<32)
+    temp = (temp + s[3][L & 0xff]) % 2**32
     return temp
 
 def decryption(data):
@@ -342,3 +342,24 @@ def decryption(data):
     return decrypted_data1
 
 driver()
+
+""" 
+OUTPUT
+
+sniper@aditya-HP-Pavilion-Laptop-15-cc1xx:~/practicals/CSS/Blowfish$ python blowfish.py 
+Enter data to encrypt: 45
+Encrypted data :  4514996536258552110
+Decrypted data :  45
+sniper@aditya-HP-Pavilion-Laptop-15-cc1xx:~/practicals/CSS/Blowfish$ python blowfish.py 
+Enter data to encrypt: 100
+Encrypted data :  5260424304376516317
+Decrypted data :  100
+sniper@aditya-HP-Pavilion-Laptop-15-cc1xx:~/practicals/CSS/Blowfish$ python blowfish.py 
+Enter data to encrypt: 0
+Encrypted data :  8420984162432263635
+Decrypted data :  0
+sniper@aditya-HP-Pavilion-Laptop-15-cc1xx:~/practicals/CSS/Blowfish$ python blowfish.py 
+Enter data to encrypt: 56873
+Encrypted data :  15237239174101842337
+Decrypted data :  56873 
+"""
